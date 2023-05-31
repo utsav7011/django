@@ -9,8 +9,6 @@ class Conversation(models.Model):
     
     members = models.ManyToManyField(User, 
                                      related_name='conversations')
-    
-    
     created_at=models.DateTimeField(auto_now_add=True)
     modified_at=models.DateTimeField(auto_now=True)
     
@@ -19,7 +17,7 @@ class Conversation(models.Model):
         
         
 class ConversationMessage(models.Model):
-    Conversation=models.ForeignKey(Conversation,
+    conversation=models.ForeignKey(Conversation,
                                    related_name='messages', 
                                    on_delete=models.CASCADE)
     content=models.TextField()
