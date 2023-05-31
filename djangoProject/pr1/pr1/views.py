@@ -1,5 +1,6 @@
-from django.http import HttpResponse
+from django.http import HttpResponse,HttpResponseRedirect
 from django.shortcuts import render
+from .forms import userFrom
 
 def homePage(request):
     data = {
@@ -15,6 +16,9 @@ def homePage(request):
     return render(request, "index.html", data)
 
 def aboutUs(request):
+    
+    if request.method == "GET":
+        output = request.GET.get('finalMarks')
     return HttpResponse("Wallahh chall gayaaa... !!!!")
 
 
@@ -24,5 +28,52 @@ def courses(request):
 def courseDetails(request, courseId):
     return HttpResponse(courseId)
 
+def userForm(request):
+    finalMarks = 0
+    fn = userForm()
+    data = {'form':fn}
+    try:
+        if request.method == "POST":
+            n1 = int(request.POST.get('num1'))
+            n2 = int(request.POST.get('num2'))
+        # n1 = int(request.GET['num1'])
+        # n2 = int(request.GET['num2'])
+        finalMarks = n1 + n2
+        data = {
+            'form':fn,
+            'output': finalMarks
+        }
+        print(n1+n2)
+        
+        url = '/about-us/?finalMaks={}'.format(finalMarks)
+        return HttpResponseRedirect(url)
+        
+        
+    except:
+        pass
+    return render(request, "userForm.html", {'output' : finalMarks})
 
 
+def calculator(request):
+    c = ''
+    try:
+        
+        if request.method == 'POST':
+            n1 = eval(request.POST.get('num1'))
+            n2 = eval(request.POST.get('num2'))
+            opr = request.POST.get('opr')
+            
+            if opr == '+':
+                c = n1 + n2
+            elif opr == '-':
+                c = n1 - n2
+            elif opr == '*':
+                c = n1 * n2
+            elif opr == '/':
+                c = n1 / n2
+            
+        print(c)
+        
+    except:
+        c = 'invalid opr....'
+    return render(request, "calculator.html", {'c': c})
